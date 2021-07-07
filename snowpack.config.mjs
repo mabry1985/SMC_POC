@@ -12,7 +12,7 @@ export default {
       '@snowpack/plugin-run-script',
       {
         // cmd: 'postcss src/styles.ts -o build/dist/styles.js',
-        cmd: 'postcss src/styles.ts -o public/dist/styles.js',
+        cmd: 'echo its lit',
         watch: 'postcss src/styles.ts -o public/dist/styles.js -w',
       },
       '@canarise/snowpack-eslint-plugin',
