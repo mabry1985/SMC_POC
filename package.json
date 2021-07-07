@@ -35,7 +35,8 @@
   },
   "dependencies": {
     "@vaadin/router": "^1.7.4",
-    "lit": "^2.0.0-rc.2"
+    "lit": "^2.0.0-rc.2",
+    "mapbox-gl": "^2.3.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.13.0",
@@ -50,6 +51,7 @@
     "@snowpack/plugin-run-script": "^2.3.0",
     "@snowpack/plugin-typescript": "^1.2.1",
     "@stylelint/postcss-css-in-js": "^0.37.2",
+    "@types/mapbox-gl": "^2.3.2",
     "@types/snowpack-env": "^2.3.3",
     "@typescript-eslint/eslint-plugin": "^4.26.1",
     "@typescript-eslint/parser": "^4.26.1",

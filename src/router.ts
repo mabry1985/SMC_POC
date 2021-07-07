@@ -11,29 +11,6 @@ export const routes: Route[] = [
     },
   },
   {
-    path: '/about',
-    name: 'about',
-    component: 'page-about',
-    action: async () => {
-      await import('./pages/page-about.js');
-    },
-  },
-  {
-    path: '/blog',
-    name: 'blog-list',
-    component: 'page-blog-list',
-    action: async () => {
-      await import('./pages/page-blog-list.js');
-    },
-  },
-  {
-    path: '/blog/:slug',
-    component: 'page-blog',
-    action: async () => {
-      await import('./pages/page-blog.js');
-    },
-  },
-  {
     // this route must be last
     path: '(.*)',
     name: 'not-found',

@@ -6,3 +6,4 @@ public/styles.js
 build
 node_modules
 yarn-error.log
+data/
