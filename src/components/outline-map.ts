@@ -122,7 +122,7 @@ export class OutlineMap extends LitElement {
         class="flex flex-col justify-center items-center w-full"
         style="height: 100vh"
       >
-        <h1 class="bg-red-300">Test</h1>
+        <h1 class="bg-green-300">Test</h1>
         ${this.renderDebugger()}
         <div style=${styleMap(styles)} class="map-container"></div>
       </div>
