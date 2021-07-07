@@ -1,8 +1,8 @@
 {
   "license": "MIT",
   "scripts": {
-    "start": "rm public/dist/styles.js && snowpack dev",
-    "build": "snowpack build && TAILWIND_MODE=build postcss src/styles.ts -o build/dist/styles.js --verbose && cp ./_redirects ./build",
+    "start": "snowpack dev",
+    "build": "snowpack build && cp ./_redirects ./build",
     "css": "yarn postcss -r ./build/styles.js",
     "test": "web-test-runner \"test/**/*.test.js\" --node-resolve",
     "test:playwright": "web-test-runner \"test/**/*.test.js\" --playwright --browsers chromium firefox webkit --node-resolve",

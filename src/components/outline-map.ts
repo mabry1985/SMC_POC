@@ -4,8 +4,6 @@ import { styleMap } from 'lit/directives/style-map.js';
 import mapboxgl, { Map } from 'mapbox-gl';
 import { tailwindStyles, mapboxStyle } from '../styles';
 import { parks } from '../data/parks';
-import __SNOWPACK_ENV__ from '../__snowpack__/env.js';
-import.meta.env = __SNOWPACK_ENV__;
 
 // import './outline-map.css';
 // import 'mapbox-gl/dist/mapbox-gl.css';
@@ -25,6 +23,14 @@ export class OutlineMap extends LitElement {
       .test {
         background: blue;
       }
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: full;
+        height: 100vh;
+      }
     `,
   ];
 
@@ -32,7 +38,8 @@ export class OutlineMap extends LitElement {
   mapContainer!: HTMLElement;
 
   @state()
-  private mapboxToken = __SNOWPACK_ENV__.SNOWPACK_PUBLIC_MAPBOX_KEY;
+  private mapboxToken =
+    'pk.eyJ1IjoibWFicnljb2RlcyIsImEiOiJja3BtMmdrb3QxeWl2MnZvOXN6ZmVrMTlsIn0.YQ7iqBRxd52utXiAsseqcw';
 
   @property()
   mapboxStyle = 'mapbox://styles/mapbox/streets-v11';
@@ -127,11 +134,7 @@ export class OutlineMap extends LitElement {
       borderRadius: this.mapBorderRadius ? this.mapBorderRadius : '',
     };
     return html`
-      <div
-        class="flex flex-col justify-center items-center w-full"
-        style="height: 100vh"
-      >
-        <h1 class="bg-green-300 test">Test</h1>
+      <div class="wrapper">
         ${this.renderDebugger()}
         <div style=${styleMap(styles)} class="map-container"></div>
       </div>
