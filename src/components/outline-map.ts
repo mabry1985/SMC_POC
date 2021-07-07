@@ -4,6 +4,8 @@ import { styleMap } from 'lit/directives/style-map.js';
 import mapboxgl, { Map } from 'mapbox-gl';
 import { tailwindStyles, mapboxStyle } from '../styles';
 import { parks } from '../data/parks';
+import __SNOWPACK_ENV__ from '../__snowpack__/env.js';
+import.meta.env = __SNOWPACK_ENV__;
 
 // import './outline-map.css';
 // import 'mapbox-gl/dist/mapbox-gl.css';
@@ -30,8 +32,7 @@ export class OutlineMap extends LitElement {
   mapContainer!: HTMLElement;
 
   @state()
-  private mapboxToken =
-    'pk.eyJ1IjoibWFicnljb2RlcyIsImEiOiJja3BtMmdrb3QxeWl2MnZvOXN6ZmVrMTlsIn0.YQ7iqBRxd52utXiAsseqcw';
+  private mapboxToken = __SNOWPACK_ENV__.SNOWPACK_PUBLIC_MAPBOX_KEY;
 
   @property()
   mapboxStyle = 'mapbox://styles/mapbox/streets-v11';
