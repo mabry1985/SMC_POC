@@ -342,6 +342,9 @@ video{
   .h-2 {
 	height: 0.5rem;
 }
+  .h-\[100vh\] {
+	height: 100vh;
+}
   .w-full {
 	width: 100%;
 }

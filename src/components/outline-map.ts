@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult } from 'lit';
+import { LitElement, html, TemplateResult, css } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import mapboxgl, { Map } from 'mapbox-gl';
@@ -16,7 +16,15 @@ export class OutlineMap extends LitElement {
   //   return this;
   // }
 
-  static styles = [tailwindStyles, mapboxStyle];
+  static styles = [
+    tailwindStyles,
+    mapboxStyle,
+    css`
+      .test {
+        background: blue;
+      }
+    `,
+  ];
 
   @query('.map-container')
   mapContainer!: HTMLElement;
@@ -122,7 +130,7 @@ export class OutlineMap extends LitElement {
         class="flex flex-col justify-center items-center w-full"
         style="height: 100vh"
       >
-        <h1 class="bg-green-300">Test</h1>
+        <h1 class="bg-green-300 test">Test</h1>
         ${this.renderDebugger()}
         <div style=${styleMap(styles)} class="map-container"></div>
       </div>
