@@ -1,13 +1,13 @@
-import basketball from '../images/basketball.svg';
-import baseball from '../images/baseball.svg';
-import boating from '../images/boating-1.svg';
-import dogPark from '../images/dog.svg';
-import picnic from '../images/picnic-table.svg';
-import playground from '../images/playground.svg';
-import restrooms from '../images/restrooms.svg';
-import skatePark from '../images/skateboarder.svg';
-import swimming from '../images/swim.svg';
-import tennis from '../images/tennis.svg';
+import basketball from './basketball.svg';
+import baseball from './baseball.svg';
+import boating from './boating-1.svg';
+import dogPark from './dog.svg';
+import picnic from './picnic-table.svg';
+import playground from './playground.svg';
+import restrooms from './restrooms.svg';
+import skatePark from './skateboarder.svg';
+import swimming from './swim.svg';
+import tennis from './tennis.svg';
 
 export const allAmenities = [
   'Basketball',
