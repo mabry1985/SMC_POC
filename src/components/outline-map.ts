@@ -201,8 +201,29 @@ export class OutlineMap extends LitElement {
         padding-bottom: 20px;
       }
 
+      .smc-header {
+        width: 100%;
+        height: 50px;
+        background-color: #056cb6;
+        margin-bottom: 5px;
+        margin-top: 0;
+        padding-top: 30px;
+      }
+
+      .smc-header h4 {
+        width: 100%;
+        color: white;
+        text-align: center;
+        margin-top: 0;
+        padding-bottom: 30px;
+      }
+
       .amenities h4 {
         margin-bottom: 10px;
+        font-weight: 500;
+        padding-left: 4px;
+        margin-top: 5px;
+        text-decoration: underline;
       }
 
       .amenity {
@@ -709,6 +730,12 @@ export class OutlineMap extends LitElement {
       <div class="container">
         <div class="map-wrapper">
           <div class="sidebar" style=${styleMap(sidebarStyles)}>
+            <div class="smc-header">
+              <a href="https://parks.smcgov.org/">
+                <h4>San Mateo County Parks</h4>
+              </a>
+            </div>
+
             <div class="amenities">
               <h4>Filter By Amenities</h4>
               ${this.renderAmenities()}
