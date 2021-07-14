@@ -6,8 +6,8 @@ import turf from '@turf/centroid';
 import turfDistance from '@turf/distance';
 import { Units } from '@turf/helpers';
 import { parks } from '../data/parks';
-import marker from './assets/marker.png';
-import userMarker from './assets/user-marker.png';
+// import marker from './assets/marker.png';
+import userMarker from '../images/user-marker.png';
 import { parkAmenities, allAmenities } from './utils';
 import { mapboxStyle } from '../styles';
 
@@ -197,14 +197,13 @@ export class OutlineMap extends LitElement {
         border-bottom-color: #91c949;
       }
 
-      .marker {
+      /* .marker {
         border: none;
         cursor: pointer;
         height: 16px;
         width: 16px;
-        background-image: url(${unsafeCSS(marker)});
         background-color: rgba(0, 0, 0, 0);
-      }
+      } */
 
       .user-marker {
         border: none;
@@ -569,7 +568,6 @@ export class OutlineMap extends LitElement {
   };
 
   getBbox = (park: any, currentLocation: number[]) => {
-    console.log(park);
     const lats = [park.geometry.coordinates[1], currentLocation[1]];
     const lons = [park.geometry.coordinates[0], currentLocation[0]];
     const sortedLons = lons.sort((a, b) => {
