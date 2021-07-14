@@ -3,6 +3,11 @@
   "plugins": ["import"],
   "parser": "@typescript-eslint/parser",
   "rules": {
+    "implicit-arrow-linebreak": "off",
+    "comma-dangle": "off",
+    "function-paren-newline": "off",
+    "arrow-parens": "off",
+    "operator-linebreak": "off",
     "object-curly-newline": "off",
     "import/extensions": [
       "error",
