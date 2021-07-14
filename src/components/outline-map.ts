@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult, css, unsafeCSS } from 'lit';
+import { LitElement, html, TemplateResult, css } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import mapboxgl, { Map, LngLatBoundsLike, LngLatLike } from 'mapbox-gl';
@@ -6,8 +6,6 @@ import turf from '@turf/centroid';
 import turfDistance from '@turf/distance';
 import { Units } from '@turf/helpers';
 import { parks } from '../data/parks';
-import marker from './assets/marker.png';
-import userMarker from './assets/user-marker.png';
 import { parkAmenities, allAmenities } from './utils';
 import { mapboxStyle } from '../styles';
 
@@ -150,69 +148,44 @@ export class OutlineMap extends LitElement {
       .mapboxgl-popup-content {
         font: 400 15px/22px 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
         padding: 0;
-        width: 180px;
+        max-width: 220px;
+        background-color: white;
       }
 
       .mapboxgl-popup-content-wrapper {
         padding: 1%;
       }
 
-      .mapboxgl-popup-content h3 {
-        background: #91c949;
-        color: #fff;
-        margin: 0;
-        display: block;
-        padding: 10px;
-        border-radius: 3px 3px 0 0;
-        font-weight: 700;
-        margin-top: -15px;
-      }
-
       .mapboxgl-popup-content h4 {
+        text-align: center;
         margin: 0;
         display: block;
         padding: 10px;
-        font-weight: 400;
+        font-weight: 500;
+        color: #5a5b5e;
+        border-bottom: 1px solid #eee;
       }
       .mapboxgl-popup-content p {
         margin: 0;
+        text-align: center;
         display: block;
         padding: 10px;
         font-weight: 400;
+        color: #5a5b5e;
       }
 
       .mapboxgl-popup-content div {
-        padding: 10px;
-      }
-
-      .mapboxgl-container .leaflet-marker-icon {
-        cursor: pointer;
+        padding: 20px;
       }
 
       .mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
         margin-top: 15px;
       }
-
-      .mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
-        border-bottom-color: #91c949;
-      }
-
-      .marker {
-        border: none;
-        cursor: pointer;
-        height: 16px;
-        width: 16px;
-        background-image: url(${unsafeCSS(marker)});
-        background-color: rgba(0, 0, 0, 0);
-      }
-
       .user-marker {
-        border: none;
-        cursor: pointer;
-        height: 24px;
-        width: 24px;
-        background-image: url(${unsafeCSS(userMarker)});
-        background-color: rgba(0, 0, 0, 0);
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        background-color: #faa634;
       }
 
       .container {
@@ -225,7 +198,14 @@ export class OutlineMap extends LitElement {
         flex-direction: column;
         border-bottom: 2px solid #eee;
         padding: 10px;
+        padding-bottom: 20px;
+        margin-bottom: 5px;
       }
+
+      .amenities h4 {
+        margin-bottom: 10px;
+      }
+
       .amenity {
         overflow: hidden;
       }
@@ -235,7 +215,7 @@ export class OutlineMap extends LitElement {
       }
 
       .amenity input {
-        display: none;
+        /* display: none; */
       }
       .amenity input:checked + label {
         color: #056cb6;
@@ -273,7 +253,7 @@ export class OutlineMap extends LitElement {
   currentCoords = [this.lng as number, this.lat as number];
 
   @property()
-  zoom: string | number = 13;
+  zoom: string | number = 15;
 
   @property()
   mapHeight = '100vh';
@@ -461,15 +441,15 @@ export class OutlineMap extends LitElement {
       });
 
       const details = listing.appendChild(document.createElement('div'));
-      const amenitiesDetails = details.appendChild(
-        document.createElement('div')
-      );
-      amenitiesDetails.classList.add('amenitiesDetails');
-      if (prop.amenities) {
-        prop.amenities.forEach((a: string) => {
-          amenitiesDetails.innerHTML += `<p>${a}</p>`;
-        });
-      }
+      // const amenitiesDetails = details.appendChild(
+      //   document.createElement('div')
+      // );
+      // amenitiesDetails.classList.add('amenitiesDetails');
+      // if (prop.amenities) {
+      //   prop.amenities.forEach((a: string) => {
+      //     amenitiesDetails.innerHTML += `<p>${a}</p>`;
+      //   });
+      // }
       if (prop.distance) {
         details.innerHTML += `<p class='distance'><strong>${
           Math.round(prop.distance * 100) / 100
@@ -500,7 +480,7 @@ export class OutlineMap extends LitElement {
     const el = document.createElement('div');
     el.id = 'user-marker';
     el.className = 'user-marker';
-    new mapboxgl.Marker(el, { offset: [0, -23] })
+    new mapboxgl.Marker(el, { offset: [0, 0] })
       .setLngLat([this.lng as number, this.lat as number])
       .addTo(this.map);
   };
@@ -519,7 +499,8 @@ export class OutlineMap extends LitElement {
     new mapboxgl.Popup({ closeOnClick: false })
       .setLngLat(currentFeature.geometry.coordinates)
       .setHTML(
-        `<h4>${currentFeature.properties.name}</h4><p>1234 NE Street Ave</p>`
+        `<h4>${currentFeature.properties.name}</h4>
+        <p>1234 NE Street Ave</p>`
       )
       .addTo(this.map);
   };
