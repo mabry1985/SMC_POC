@@ -199,7 +199,6 @@ export class OutlineMap extends LitElement {
         border-bottom: 2px solid #eee;
         padding: 10px;
         padding-bottom: 20px;
-        margin-bottom: 5px;
       }
 
       .amenities h4 {
@@ -275,9 +274,6 @@ export class OutlineMap extends LitElement {
 
   @state()
   private allParks = parks;
-
-  @state()
-  private filteredParks!: any;
 
   @state()
   private amenityFilters: string[] = [];
@@ -702,11 +698,11 @@ export class OutlineMap extends LitElement {
     };
     const sidebarStyles = {
       height: this.mapHeight,
-      width: '20vw',
+      width: '15vw',
     };
     const listingsStyle = {
       height: '72vh',
-      width: '20vw',
+      width: '15vw',
     };
     return html`
       ${this.renderDebugger()}
