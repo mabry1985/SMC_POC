@@ -6,8 +6,8 @@ import turf from '@turf/centroid';
 import turfDistance from '@turf/distance';
 import { Units } from '@turf/helpers';
 import { parks } from '../data/parks';
-import marker from './marker.png';
-import userMarker from './user-marker.png';
+import marker from './assets/marker.png';
+import userMarker from './assets/user-marker.png';
 import { parkAmenities, allAmenities } from './utils';
 import { mapboxStyle } from '../styles';
 
