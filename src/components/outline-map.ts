@@ -121,8 +121,14 @@ export class OutlineMap extends LitElement {
         margin: 2px 0;
         display: block;
         font-weight: 500;
-        font-size: 13px;
+        font-size: 14px;
         color: #464646;
+      }
+
+      .listings-address a {
+        text-decoration: underline;
+        color: #056cb6;
+        font-size: 13.5px;
       }
 
       .distance {
@@ -207,10 +213,10 @@ export class OutlineMap extends LitElement {
       }
 
       .user-marker {
-        height: 12px;
-        width: 12px;
+        height: 18px;
+        width: 18px;
         border-radius: 50%;
-        background-color: #faa634;
+        background-color: #f27807;
       }
 
       .container {
@@ -340,7 +346,7 @@ export class OutlineMap extends LitElement {
   currentCoords = [this.lng as number, this.lat as number];
 
   @property()
-  zoom: string | number = 15;
+  zoom: string | number = 10;
 
   @property()
   mapHeight = '100vh';
@@ -527,6 +533,8 @@ export class OutlineMap extends LitElement {
       listingAddress.classList.add('listings-address');
       listingAddress.innerHTML +=
         '<p>1234 NE Street Ave</p><p>City State 00000</p>';
+      listingAddress.innerHTML +=
+        '<a href="https://parks.smcgov.org/" target="_blank">Park Website</a>';
       const details = listing.appendChild(document.createElement('div'));
       // const amenitiesDetails = details.appendChild(
       //   document.createElement('div')
@@ -835,7 +843,7 @@ export class OutlineMap extends LitElement {
         <div class="map-wrapper">
           <div class="sidebar" style=${styleMap(sidebarStyles)}>
             <div class="smc-header">
-              <a href="https://parks.smcgov.org/">
+              <a href="https://parks.smcgov.org/" target="_blank">
                 <h4>San Mateo County Parks</h4>
               </a>
             </div>
