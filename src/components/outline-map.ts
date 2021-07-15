@@ -36,7 +36,7 @@ export class OutlineMap extends LitElement {
         color: #ffffff;
         padding: 6px 12px;
         font-family: monospace;
-        z-index: 1;
+        z-index: 10000;
         position: absolute;
         top: 0;
         left: 0;
@@ -300,6 +300,7 @@ export class OutlineMap extends LitElement {
         width: 200px;
         box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
         padding: 5px;
+        padding-left: 10px;
       }
     `,
   ];
@@ -712,7 +713,7 @@ export class OutlineMap extends LitElement {
       style: this.mapboxStyle,
       center: this.currentCoords as LngLatLike,
       zoom: this.zoom as number,
-      // minZoom: 10.5,
+      minZoom: 9.5,
     });
     this.map.on('move', () => {
       const lng = this.map.getCenter().lng.toFixed(4);
@@ -844,7 +845,7 @@ export class OutlineMap extends LitElement {
                 id="zip-code-search"
                 name="q"
                 aria-label="search starting coordinates by zip code"
-                placeholder="Search by Zipcode"
+                placeholder="Search by County Zipcode..."
               />
               <button @click=${this.handleSearch}>Search</button>
             </form>
