@@ -59,3 +59,20 @@ export const parkAmenities = [
     'Tennis',
   ],
 ];
+
+export const icons = {
+  Baseball: '/dist/components/assets/baseball.svg',
+  Basketball: '/dist/components/assets/basketball.svg',
+  Boating: '/dist/components/assets/boating.svg',
+  'Dog Park': '/dist/components/assets/dog.svg',
+  Logo: '/dist/components/assets/SMC-logo.png',
+  Marker: '/dist/components/assets/marker.png',
+  Person: '/dist/components/assets/person.svg',
+  Picnic: '/dist/components/assets/picnic-table.svg',
+  Playground: '/dist/components/assets/playground.svg',
+  Restrooms: '/dist/components/assets/restrooms.svg',
+  Skateboarding: '/dist/components/assets/skateboarder.svg',
+  Swimming: '/dist/components/assets/swim.svg',
+  Tennis: '/dist/components/assets/tennis.svg',
+  User: '/dist/components/assets/user-marker.svg',
+};

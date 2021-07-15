@@ -6,7 +6,7 @@ import turf from '@turf/centroid';
 import turfDistance from '@turf/distance';
 import { Units } from '@turf/helpers';
 import { parks } from '../data/parks';
-import { parkAmenities, allAmenities } from './utils';
+import { parkAmenities, allAmenities, icons } from './utils';
 import { mapboxStyle } from '../styles';
 
 @customElement('outline-map')
@@ -214,12 +214,18 @@ export class OutlineMap extends LitElement {
 
       .user-marker {
         border: none;
-        cursor: pointer;
         height: 24px;
         width: 24px;
-        background-image: url(${unsafeCSS(
-          '/dist/components/assets/user-marker.png'
-        )});
+        background-image: url(${unsafeCSS(icons.User)});
+        background-repeat: no-repeat;
+        background-color: rgba(0, 0, 0, 0);
+      }
+
+      .park-marker {
+        border: none;
+        height: 24px;
+        width: 24px;
+        background-image: url(${unsafeCSS(icons.Marker)});
         background-color: rgba(0, 0, 0, 0);
       }
 
@@ -574,7 +580,7 @@ export class OutlineMap extends LitElement {
     this.data.forEach((m: any) => {
       const el = document.createElement('div');
       el.id = `marker-${m.properties.id}`;
-      el.className = 'marker';
+      el.className = 'park-marker';
       new mapboxgl.Marker(el, { offset: [0, -23] })
         .setLngLat(m.geometry.coordinates)
         .addTo(this.map);
@@ -787,7 +793,9 @@ export class OutlineMap extends LitElement {
         source: 'parks',
         paint: {
           'circle-radius': 5,
-          'circle-color': '#056cb6',
+          'circle-color': '#7AAD34',
+          'circle-stroke-color': '#fff',
+          'circle-stroke-width': 2,
         },
         filter: ['==', '$type', 'Point'],
       });
