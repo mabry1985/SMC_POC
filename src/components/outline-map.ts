@@ -56,7 +56,9 @@ export class OutlineMap extends LitElement {
 
       .sidebar {
         background-color: white;
-        border: 1px #eee solid;
+        /* border: 1px #eee solid; */
+        display: flex;
+        flex-direction: column;
         position: relative;
         top: 0;
         left: 0;
@@ -71,10 +73,14 @@ export class OutlineMap extends LitElement {
         align-items: center;
         width: full;
         height: 100vh;
+        overflow: hidden;
       }
 
       .listings {
+        display: flex;
+        flex-direction: column;
         overflow: auto;
+        /* height: 60%; */
       }
 
       .listings .item {
@@ -169,8 +175,8 @@ export class OutlineMap extends LitElement {
         margin: 0;
         text-align: center;
         display: block;
-        padding: 10px;
-        font-weight: 400;
+        font-weight: 500;
+        font-size: 13px;
         color: #5a5b5e;
       }
 
@@ -181,6 +187,11 @@ export class OutlineMap extends LitElement {
       .mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
         margin-top: 15px;
       }
+
+      .popup-address {
+        padding: 5px;
+      }
+
       .user-marker {
         height: 12px;
         width: 12px;
@@ -193,17 +204,9 @@ export class OutlineMap extends LitElement {
         flex-direction: column;
       }
 
-      .amenities {
-        display: flex;
-        flex-direction: column;
-        border-bottom: 2px solid #eee;
-        padding: 10px;
-        padding-bottom: 20px;
-      }
-
       .smc-header {
         width: 100%;
-        height: 50px;
+        height: 5%;
         background-color: #056cb6;
         margin-bottom: 5px;
         margin-top: 0;
@@ -218,16 +221,23 @@ export class OutlineMap extends LitElement {
         padding-bottom: 30px;
       }
 
+      .amenities {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 2px solid #eee;
+        padding: 10px;
+        padding-bottom: 20px;
+      }
+
+      .amenities {
+        padding: 0 0 10px 10px;
+      }
       .amenities h4 {
         margin-bottom: 10px;
         font-weight: 500;
         padding-left: 4px;
         margin-top: 5px;
         text-decoration: underline;
-      }
-
-      .amenity {
-        overflow: hidden;
       }
 
       .amenity label {
@@ -237,6 +247,7 @@ export class OutlineMap extends LitElement {
       .amenity input {
         /* display: none; */
       }
+
       .amenity input:checked + label {
         color: #056cb6;
       }
@@ -251,6 +262,44 @@ export class OutlineMap extends LitElement {
         padding: 0 5px;
         margin: 1px;
       }
+
+      .sr-only:not(:focus):not(:active) {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
+
+      .search-bar {
+        padding: 10px;
+        z-index: 100;
+        position: absolute;
+        top: 5;
+        left: 30;
+      }
+
+      .search-bar button {
+        background-color: #056cb6;
+        color: white;
+        border: none;
+        cursor: pointer;
+        height: 30px;
+        width: 75px;
+        margin-left: 10px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        padding: 5px;
+      }
+
+      .search-bar input {
+        border: none;
+        height: 30px;
+        width: 200px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        padding: 5px;
+      }
     `,
   ];
 
@@ -259,6 +308,9 @@ export class OutlineMap extends LitElement {
 
   @query('#listings')
   listings!: HTMLElement;
+
+  @query('#zip-code-search')
+  searchField!: HTMLInputElement;
 
   @property()
   mapboxStyle = 'mapbox://styles/mapbox/streets-v11';
@@ -475,6 +527,12 @@ export class OutlineMap extends LitElement {
     });
   };
 
+  clearListings = () => {
+    while (this.listings.firstChild) {
+      this.listings.removeChild(this.listings.firstChild);
+    }
+  };
+
   formatName = (name: string) =>
     name
       .toLowerCase()
@@ -494,17 +552,22 @@ export class OutlineMap extends LitElement {
   };
 
   addUserMarker = () => {
-    const el = document.createElement('div');
-    el.id = 'user-marker';
-    el.className = 'user-marker';
+    let el: HTMLElement;
+    if (this.shadowRoot!.getElementById('user-marker')) {
+      el = this.shadowRoot!.getElementById('user-marker') as HTMLElement;
+    } else {
+      el = document.createElement('div');
+      el.id = 'user-marker';
+      el.className = 'user-marker';
+    }
     new mapboxgl.Marker(el, { offset: [0, 0] })
-      .setLngLat([this.lng as number, this.lat as number])
+      .setLngLat(this.currentCoords as LngLatLike)
       .addTo(this.map);
   };
 
-  flyToMarker = (currentFeature: any) => {
+  flyToMarker = (coords: LngLatLike) => {
     this.map.flyTo({
-      center: currentFeature.geometry.coordinates,
+      center: coords,
       zoom: 15,
     });
   };
@@ -516,8 +579,12 @@ export class OutlineMap extends LitElement {
     new mapboxgl.Popup({ closeOnClick: false })
       .setLngLat(currentFeature.geometry.coordinates)
       .setHTML(
-        `<h4>${currentFeature.properties.name}</h4>
-        <p>1234 NE Street Ave</p>`
+        `<h4>${this.formatName(currentFeature.properties.name)}</h4>
+        <div class="popup-address">
+          <p>1234 NE Street Ave</p>
+          <p>City, State 00000</p>
+        </div>
+        `
       )
       .addTo(this.map);
   };
@@ -553,9 +620,7 @@ export class OutlineMap extends LitElement {
         this.arrayContainsArray(park.properties.amenities, this.amenityFilters)
       );
     }
-    while (this.listings.firstChild) {
-      this.listings.removeChild(this.listings.firstChild);
-    }
+    this.clearListings();
     this.buildLocationList(filteredData);
   };
 
@@ -618,6 +683,24 @@ export class OutlineMap extends LitElement {
         </span> `
     );
 
+  handleSearch = (e: MouseEvent) => {
+    e.preventDefault();
+    fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.searchField.value}.json?access_token=${this.mapboxToken}&bbox=-122.57826598377432,37.05900004313753,-122.02382833611789,37.82712726728694`
+    )
+      .then(response => response.json())
+      .then(data => {
+        this.currentCoords = data.features[0].center;
+        this.addUserMarker();
+        this.calculateDistance();
+        this.sortByDistance();
+        this.clearListings();
+        this.buildLocationList(this.data);
+        this.flyToMarker(this.currentCoords as LngLatLike);
+      });
+    this.searchField.value = '';
+  };
+
   firstUpdated(): void {
     this.parseParksData();
     this.addAmenities();
@@ -628,7 +711,7 @@ export class OutlineMap extends LitElement {
       style: this.mapboxStyle,
       center: this.currentCoords as LngLatLike,
       zoom: this.zoom as number,
-      minZoom: 10.5,
+      // minZoom: 10.5,
     });
     this.map.on('move', () => {
       const lng = this.map.getCenter().lng.toFixed(4);
@@ -638,7 +721,7 @@ export class OutlineMap extends LitElement {
       this.setCoords(lng, lat, zoom);
     });
     this.map.on('load', () => {
-      this.getRoute([this.lng as number, this.lat as number]);
+      this.getRoute(this.currentCoords);
       this.map.addSource('parks', {
         type: 'geojson',
         data: {
@@ -646,6 +729,7 @@ export class OutlineMap extends LitElement {
           features: this.data,
         },
       });
+      this.map.addControl(new mapboxgl.NavigationControl());
       this.map.addSource('user', {
         type: 'geojson',
         data: {
@@ -664,6 +748,7 @@ export class OutlineMap extends LitElement {
           ],
         },
       });
+
       this.addUserMarker();
       // this.addMarkers();
       this.map.addLayer({
@@ -722,8 +807,9 @@ export class OutlineMap extends LitElement {
       width: '15vw',
     };
     const listingsStyle = {
-      height: '72vh',
+      height: '100vh',
       width: '15vw',
+      overflow: 'auto',
     };
     return html`
       ${this.renderDebugger()}
@@ -746,7 +832,22 @@ export class OutlineMap extends LitElement {
               style=${styleMap(listingsStyle)}
             ></div>
           </div>
-          <div style=${styleMap(mapStyles)} class="map-container"></div>
+          <div style=${styleMap(mapStyles)} class="map-container">
+            <form class="search-bar">
+              <label class="sr-only" for="zip-code-search"
+                >Search by zip-code:</label
+              >
+              <input
+                type="search"
+                autocomplete="off"
+                id="zip-code-search"
+                name="q"
+                aria-label="search starting coordinates by zip code"
+                placeholder="Search by Zipcode"
+              />
+              <button @click=${this.handleSearch}>Search</button>
+            </form>
+          </div>
         </div>
       </div>
     `;
