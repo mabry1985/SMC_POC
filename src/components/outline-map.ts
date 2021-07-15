@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult, css } from 'lit';
+import { LitElement, html, TemplateResult, css, unsafeCSS } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import mapboxgl, { Map, LngLatBoundsLike, LngLatLike } from 'mapbox-gl';
@@ -8,6 +8,7 @@ import { Units } from '@turf/helpers';
 import { parks } from '../data/parks';
 import { parkAmenities, allAmenities } from './utils';
 import { mapboxStyle } from '../styles';
+import userMarker from './assets/user-marker.png';
 
 @customElement('outline-map')
 export class OutlineMap extends LitElement {
@@ -193,10 +194,12 @@ export class OutlineMap extends LitElement {
       }
 
       .user-marker {
-        height: 12px;
-        width: 12px;
-        border-radius: 50%;
-        background-color: #faa634;
+        border: none;
+        cursor: pointer;
+        height: 24px;
+        width: 24px;
+        background-image: url(${unsafeCSS(userMarker)});
+        background-color: rgba(0, 0, 0, 0);
       }
 
       .container {
