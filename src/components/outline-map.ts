@@ -615,11 +615,11 @@ export class OutlineMap extends LitElement {
       .addTo(this.map);
   };
 
-  handleAmenitiesChange = (e: any) => {
-    if (this.amenityFilters.includes(e.path[0].id)) {
-      this.amenityFilters.splice(this.amenityFilters.indexOf(e.path[0].id), 1);
+  handleAmenitiesChange = (amenity: string) => {
+    if (this.amenityFilters.includes(amenity)) {
+      this.amenityFilters.splice(this.amenityFilters.indexOf(amenity), 1);
     } else {
-      this.amenityFilters.push(e.path[0].id);
+      this.amenityFilters.push(amenity);
     }
     this.filterByAmenities();
   };
@@ -700,7 +700,7 @@ export class OutlineMap extends LitElement {
         html`<span class="amenity">
           <input
             type="checkbox"
-            @click=${this.handleAmenitiesChange}
+            @click=${() => this.handleAmenitiesChange(a)}
             id=${a}
             name=${a}
             .value=${a}
