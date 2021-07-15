@@ -113,6 +113,18 @@ export class OutlineMap extends LitElement {
         background-color: #f8f8f8;
       }
 
+      .listings-address {
+        padding: 5px 0;
+      }
+
+      .listings-address p {
+        margin: 2px 0;
+        display: block;
+        font-weight: 500;
+        font-size: 13px;
+        color: #464646;
+      }
+
       .distance {
         font-size: 14px;
         margin: 1px;
@@ -511,7 +523,10 @@ export class OutlineMap extends LitElement {
         }
         listing.classList.add('active');
       });
-
+      const listingAddress = listing.appendChild(document.createElement('div'));
+      listingAddress.classList.add('listings-address');
+      listingAddress.innerHTML +=
+        '<p>1234 NE Street Ave</p><p>City State 00000</p>';
       const details = listing.appendChild(document.createElement('div'));
       // const amenitiesDetails = details.appendChild(
       //   document.createElement('div')
