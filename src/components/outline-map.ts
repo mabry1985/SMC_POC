@@ -230,10 +230,8 @@ export class OutlineMap extends LitElement {
         padding-bottom: 20px;
       }
 
-      .amenities {
-        padding: 0 0 10px 10px;
-      }
       .amenities h4 {
+        color: #464646;
         margin-bottom: 10px;
         font-weight: 500;
         padding-left: 4px;
@@ -242,10 +240,12 @@ export class OutlineMap extends LitElement {
       }
 
       .amenity label {
+        color: #464646;
         cursor: pointer;
       }
 
       .amenity input {
+        color: #464646;
         /* display: none; */
       }
 
