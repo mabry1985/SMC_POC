@@ -8,7 +8,7 @@ import { Units } from '@turf/helpers';
 import { parks } from '../data/parks';
 import { parkAmenities, allAmenities } from './utils';
 import { mapboxStyle } from '../styles';
-import userMarker from '/dist/images/user-marker.png';
+import userMarker from '/dist/components/assets/user-marker.png';
 
 @customElement('outline-map')
 export class OutlineMap extends LitElement {
