@@ -712,7 +712,7 @@ export class OutlineMap extends LitElement {
   handleSearch = (e: MouseEvent) => {
     e.preventDefault();
     fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.searchField.value}.json?access_token=${this.mapboxToken}&bbox=-122.57826598377432,37.05900004313753,-122.02382833611789,37.82712726728694`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.searchField.value}.json?access_token=${this.mapboxToken}`
     )
       .then(response => response.json())
       .then(data => {
@@ -737,7 +737,7 @@ export class OutlineMap extends LitElement {
       style: this.mapboxStyle,
       center: this.currentCoords as LngLatLike,
       zoom: this.zoom as number,
-      minZoom: 9.5,
+      // minZoom: 9.5,
     });
     this.map.on('move', () => {
       const lng = this.map.getCenter().lng.toFixed(4);
