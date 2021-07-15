@@ -168,7 +168,8 @@ export class OutlineMap extends LitElement {
         display: block;
         padding: 10px;
         font-weight: 500;
-        color: #5a5b5e;
+        color: white;
+        background-color: #056cb6;
         border-bottom: 1px solid #eee;
       }
       .mapboxgl-popup-content p {
