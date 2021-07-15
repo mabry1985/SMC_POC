@@ -8,7 +8,6 @@ import { Units } from '@turf/helpers';
 import { parks } from '../data/parks';
 import { parkAmenities, allAmenities } from './utils';
 import { mapboxStyle } from '../styles';
-import userMarker from '/dist/components/assets/user-marker.png';
 
 @customElement('outline-map')
 export class OutlineMap extends LitElement {
@@ -218,7 +217,9 @@ export class OutlineMap extends LitElement {
         cursor: pointer;
         height: 24px;
         width: 24px;
-        background-image: url(${unsafeCSS(userMarker)});
+        background-image: url(${unsafeCSS(
+          '/dist/components/assets/user-marker.png'
+        )});
         background-color: rgba(0, 0, 0, 0);
       }
 
