@@ -114,6 +114,24 @@ export class OutlineMap extends LitElement {
         background-color: #f8f8f8;
       }
 
+      .listings-address {
+        padding: 5px 0;
+      }
+
+      .listings-address p {
+        margin: 2px 0;
+        display: block;
+        font-weight: 500;
+        font-size: 14px;
+        color: #464646;
+      }
+
+      .listings-address a {
+        text-decoration: underline;
+        color: #056cb6;
+        font-size: 13.5px;
+      }
+
       .distance {
         font-size: 14px;
         margin: 1px;
@@ -331,7 +349,7 @@ export class OutlineMap extends LitElement {
   currentCoords = [this.lng as number, this.lat as number];
 
   @property()
-  zoom: string | number = 15;
+  zoom: string | number = 10;
 
   @property()
   mapHeight = '100vh';
@@ -514,7 +532,12 @@ export class OutlineMap extends LitElement {
         }
         listing.classList.add('active');
       });
-
+      const listingAddress = listing.appendChild(document.createElement('div'));
+      listingAddress.classList.add('listings-address');
+      listingAddress.innerHTML +=
+        '<p>1234 NE Street Ave</p><p>City State 00000</p>';
+      listingAddress.innerHTML +=
+        '<a href="https://parks.smcgov.org/" target="_blank">Park Website</a>';
       const details = listing.appendChild(document.createElement('div'));
       // const amenitiesDetails = details.appendChild(
       //   document.createElement('div')
@@ -595,11 +618,11 @@ export class OutlineMap extends LitElement {
       .addTo(this.map);
   };
 
-  handleAmenitiesChange = (e: any) => {
-    if (this.amenityFilters.includes(e.path[0].id)) {
-      this.amenityFilters.splice(this.amenityFilters.indexOf(e.path[0].id), 1);
+  handleAmenitiesChange = (amenity: string) => {
+    if (this.amenityFilters.includes(amenity)) {
+      this.amenityFilters.splice(this.amenityFilters.indexOf(amenity), 1);
     } else {
-      this.amenityFilters.push(e.path[0].id);
+      this.amenityFilters.push(amenity);
     }
     this.filterByAmenities();
   };
@@ -680,7 +703,7 @@ export class OutlineMap extends LitElement {
         html`<span class="amenity">
           <input
             type="checkbox"
-            @click=${this.handleAmenitiesChange}
+            @click=${() => this.handleAmenitiesChange(a)}
             id=${a}
             name=${a}
             .value=${a}
@@ -692,7 +715,7 @@ export class OutlineMap extends LitElement {
   handleSearch = (e: MouseEvent) => {
     e.preventDefault();
     fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.searchField.value}.json?access_token=${this.mapboxToken}&bbox=-122.57826598377432,37.05900004313753,-122.02382833611789,37.82712726728694`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${this.searchField.value}.json?access_token=${this.mapboxToken}`
     )
       .then(response => response.json())
       .then(data => {
@@ -717,7 +740,7 @@ export class OutlineMap extends LitElement {
       style: this.mapboxStyle,
       center: this.currentCoords as LngLatLike,
       zoom: this.zoom as number,
-      minZoom: 9.5,
+      // minZoom: 9.5,
     });
     this.map.on('move', () => {
       const lng = this.map.getCenter().lng.toFixed(4);
@@ -823,7 +846,7 @@ export class OutlineMap extends LitElement {
         <div class="map-wrapper">
           <div class="sidebar" style=${styleMap(sidebarStyles)}>
             <div class="smc-header">
-              <a href="https://parks.smcgov.org/">
+              <a href="https://parks.smcgov.org/" target="_blank">
                 <h4>San Mateo County Parks</h4>
               </a>
             </div>
