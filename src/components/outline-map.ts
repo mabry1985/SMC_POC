@@ -37,7 +37,7 @@ export class OutlineMap extends LitElement {
         color: #ffffff;
         padding: 6px 12px;
         font-family: monospace;
-        z-index: 1;
+        z-index: 10000;
         position: absolute;
         top: 0;
         left: 0;
@@ -157,6 +157,7 @@ export class OutlineMap extends LitElement {
         padding: 0;
         max-width: 220px;
         background-color: white;
+        pointer-events: none;
       }
 
       .mapboxgl-popup-content-wrapper {
@@ -169,7 +170,8 @@ export class OutlineMap extends LitElement {
         display: block;
         padding: 10px;
         font-weight: 500;
-        color: #5a5b5e;
+        color: white;
+        background-color: #056cb6;
         border-bottom: 1px solid #eee;
       }
       .mapboxgl-popup-content p {
@@ -232,10 +234,8 @@ export class OutlineMap extends LitElement {
         padding-bottom: 20px;
       }
 
-      .amenities {
-        padding: 0 0 10px 10px;
-      }
       .amenities h4 {
+        color: #464646;
         margin-bottom: 10px;
         font-weight: 500;
         padding-left: 4px;
@@ -244,10 +244,12 @@ export class OutlineMap extends LitElement {
       }
 
       .amenity label {
+        color: #464646;
         cursor: pointer;
       }
 
       .amenity input {
+        color: #464646;
         /* display: none; */
       }
 
@@ -302,6 +304,7 @@ export class OutlineMap extends LitElement {
         width: 200px;
         box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
         padding: 5px;
+        padding-left: 10px;
       }
     `,
   ];
@@ -682,7 +685,7 @@ export class OutlineMap extends LitElement {
             name=${a}
             .value=${a}
           />
-          <label id=${a} tabindex="0" for=${a}>${a}</label>
+          <label id=${a} for=${a}>${a}</label>
         </span> `
     );
 
@@ -714,7 +717,7 @@ export class OutlineMap extends LitElement {
       style: this.mapboxStyle,
       center: this.currentCoords as LngLatLike,
       zoom: this.zoom as number,
-      // minZoom: 10.5,
+      minZoom: 9.5,
     });
     this.map.on('move', () => {
       const lng = this.map.getCenter().lng.toFixed(4);
@@ -846,7 +849,7 @@ export class OutlineMap extends LitElement {
                 id="zip-code-search"
                 name="q"
                 aria-label="search starting coordinates by zip code"
-                placeholder="Search by Zipcode"
+                placeholder="Search by County Zipcode..."
               />
               <button @click=${this.handleSearch}>Search</button>
             </form>
