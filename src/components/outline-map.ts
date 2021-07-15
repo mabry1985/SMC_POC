@@ -156,6 +156,7 @@ export class OutlineMap extends LitElement {
         padding: 0;
         max-width: 220px;
         background-color: white;
+        pointer-events: none;
       }
 
       .mapboxgl-popup-content-wrapper {
@@ -681,7 +682,7 @@ export class OutlineMap extends LitElement {
             name=${a}
             .value=${a}
           />
-          <label id=${a} tabindex="0" for=${a}>${a}</label>
+          <label id=${a} for=${a}>${a}</label>
         </span> `
     );
 
