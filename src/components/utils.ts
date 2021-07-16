@@ -25,7 +25,6 @@ export const parkAmenities = [
     'Restrooms',
     'Skateboarding',
     'Swimming',
-    'Restrooms',
     'Tennis',
   ],
   ['Basketball', 'Baseball', 'Boating', 'Dog Park', 'Picnic'],

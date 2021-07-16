@@ -183,6 +183,7 @@ export class OutlineMap extends LitElement {
 
       .mapboxgl-popup-content h4 {
         text-align: center;
+        font-size: 18px;
         margin: 0;
         display: block;
         padding: 10px;
@@ -196,8 +197,7 @@ export class OutlineMap extends LitElement {
         text-align: center;
         display: block;
         font-weight: 500;
-        font-size: 13px;
-        color: #5a5b5e;
+        font-size: 14px;
       }
 
       .mapboxgl-popup-content div {
@@ -210,6 +210,21 @@ export class OutlineMap extends LitElement {
 
       .popup-address {
         padding: 5px;
+      }
+
+      #popup-icons-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0 8px 10px 8px;
+      }
+
+      .popup-icon {
+        width: 18px;
+        padding: 5px;
+        margin: 3px;
+        border: 1px solid black;
+        border-radius: 5px;
       }
 
       .user-marker {
@@ -529,7 +544,6 @@ export class OutlineMap extends LitElement {
         this.map.fitBounds(bbox as LngLatBoundsLike, {
           padding: 180,
         });
-        // this.flyToMarker(park);
         this.createPopUp(park);
         this.getRoute(parkCoords);
 
@@ -611,7 +625,9 @@ export class OutlineMap extends LitElement {
   createPopUp = (currentFeature: any) => {
     const popUps = this.shadowRoot!.querySelectorAll('.mapboxgl-popup');
     if (popUps[0]) popUps[0].remove();
-
+    const amenities = currentFeature.properties.amenities.map(
+      a => `<img class='popup-icon' src=${icons[a]} alt=${a}/>`
+    );
     new mapboxgl.Popup({ closeOnClick: false })
       .setLngLat(currentFeature.geometry.coordinates)
       .setHTML(
@@ -620,10 +636,18 @@ export class OutlineMap extends LitElement {
           <p>1234 NE Street Ave</p>
           <p>City, State 00000</p>
         </div>
+        <div id='popup-icons-container'>
+          ${amenities.join(' ')}
+        </div>
         `
       )
       .addTo(this.map);
   };
+
+  // addAmenityIcons = (park: any) =>
+  //   park.properties.amenities.forEach(
+  //     (a: any) => html`<img alt=${a} src=${icons[a]}></img>`
+  //   );
 
   handleAmenitiesChange = (amenity: string) => {
     if (this.amenityFilters.includes(amenity)) {
@@ -806,12 +830,14 @@ export class OutlineMap extends LitElement {
         });
 
         if (features.length !== undefined && features.length > 0) {
-          const clickedPoint = features[0];
+          const clickedPoint = this.data.filter(
+            d => d.properties.id === features[0].properties!.id
+          )[0];
+
           const bbox = this.getBbox(clickedPoint, this.currentCoords);
           this.map.fitBounds(bbox as LngLatBoundsLike, {
             padding: 120,
           });
-          // this.flyToMarker(clickedPoint);
           this.createPopUp(clickedPoint);
           // @ts-ignore
           this.getRoute(clickedPoint.geometry.coordinates);
