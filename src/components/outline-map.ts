@@ -1,4 +1,4 @@
-import { LitElement, html, TemplateResult, css } from 'lit';
+import { LitElement, html, TemplateResult, css, unsafeCSS } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import mapboxgl, { Map, LngLatBoundsLike, LngLatLike } from 'mapbox-gl';
@@ -6,7 +6,7 @@ import turf from '@turf/centroid';
 import turfDistance from '@turf/distance';
 import { Units } from '@turf/helpers';
 import { parks } from '../data/parks';
-import { parkAmenities, allAmenities } from './utils';
+import { parkAmenities, allAmenities, icons } from './utils';
 import { mapboxStyle } from '../styles';
 
 @customElement('outline-map')
@@ -183,6 +183,7 @@ export class OutlineMap extends LitElement {
 
       .mapboxgl-popup-content h4 {
         text-align: center;
+        font-size: 18px;
         margin: 0;
         display: block;
         padding: 10px;
@@ -196,8 +197,7 @@ export class OutlineMap extends LitElement {
         text-align: center;
         display: block;
         font-weight: 500;
-        font-size: 13px;
-        color: #5a5b5e;
+        font-size: 14px;
       }
 
       .mapboxgl-popup-content div {
@@ -212,11 +212,36 @@ export class OutlineMap extends LitElement {
         padding: 5px;
       }
 
-      .user-marker {
-        height: 18px;
+      #popup-icons-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0 8px 10px 8px;
+      }
+
+      .popup-icon {
         width: 18px;
-        border-radius: 50%;
-        background-color: #f27807;
+        padding: 5px;
+        margin: 3px;
+        border: 1px solid black;
+        border-radius: 5px;
+      }
+
+      .user-marker {
+        border: none;
+        height: 24px;
+        width: 24px;
+        background-image: url(${unsafeCSS(icons.User)});
+        background-repeat: no-repeat;
+        background-color: rgba(0, 0, 0, 0);
+      }
+
+      .park-marker {
+        border: none;
+        height: 24px;
+        width: 24px;
+        background-image: url(${unsafeCSS(icons.Marker)});
+        background-color: rgba(0, 0, 0, 0);
       }
 
       .container {
@@ -519,7 +544,6 @@ export class OutlineMap extends LitElement {
         this.map.fitBounds(bbox as LngLatBoundsLike, {
           padding: 180,
         });
-        // this.flyToMarker(park);
         this.createPopUp(park);
         this.getRoute(parkCoords);
 
@@ -570,7 +594,7 @@ export class OutlineMap extends LitElement {
     this.data.forEach((m: any) => {
       const el = document.createElement('div');
       el.id = `marker-${m.properties.id}`;
-      el.className = 'marker';
+      el.className = 'park-marker';
       new mapboxgl.Marker(el, { offset: [0, -23] })
         .setLngLat(m.geometry.coordinates)
         .addTo(this.map);
@@ -601,7 +625,9 @@ export class OutlineMap extends LitElement {
   createPopUp = (currentFeature: any) => {
     const popUps = this.shadowRoot!.querySelectorAll('.mapboxgl-popup');
     if (popUps[0]) popUps[0].remove();
-
+    const amenities = currentFeature.properties.amenities.map(
+      a => `<img class='popup-icon' src=${icons[a]} alt=${a}/>`
+    );
     new mapboxgl.Popup({ closeOnClick: false })
       .setLngLat(currentFeature.geometry.coordinates)
       .setHTML(
@@ -610,10 +636,18 @@ export class OutlineMap extends LitElement {
           <p>1234 NE Street Ave</p>
           <p>City, State 00000</p>
         </div>
+        <div id='popup-icons-container'>
+          ${amenities.join(' ')}
+        </div>
         `
       )
       .addTo(this.map);
   };
+
+  // addAmenityIcons = (park: any) =>
+  //   park.properties.amenities.forEach(
+  //     (a: any) => html`<img alt=${a} src=${icons[a]}></img>`
+  //   );
 
   handleAmenitiesChange = (amenity: string) => {
     if (this.amenityFilters.includes(amenity)) {
@@ -783,7 +817,9 @@ export class OutlineMap extends LitElement {
         source: 'parks',
         paint: {
           'circle-radius': 5,
-          'circle-color': '#056cb6',
+          'circle-color': '#7AAD34',
+          'circle-stroke-color': '#fff',
+          'circle-stroke-width': 2,
         },
         filter: ['==', '$type', 'Point'],
       });
@@ -794,12 +830,14 @@ export class OutlineMap extends LitElement {
         });
 
         if (features.length !== undefined && features.length > 0) {
-          const clickedPoint = features[0];
+          const clickedPoint = this.data.filter(
+            d => d.properties.id === features[0].properties!.id
+          )[0];
+
           const bbox = this.getBbox(clickedPoint, this.currentCoords);
           this.map.fitBounds(bbox as LngLatBoundsLike, {
             padding: 120,
           });
-          // this.flyToMarker(clickedPoint);
           this.createPopUp(clickedPoint);
           // @ts-ignore
           this.getRoute(clickedPoint.geometry.coordinates);
