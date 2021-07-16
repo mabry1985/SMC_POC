@@ -788,7 +788,92 @@ export class OutlineMap extends LitElement {
           type: 'FeatureCollection',
           features: this.data,
         },
+        cluster: true,
+        clusterMaxZoom: 14,
+        clusterRadius: 50,
       });
+      this.map.addLayer({
+        id: 'clusters',
+        type: 'circle',
+        source: 'parks',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': [
+            'step',
+            ['get', 'point_count'],
+            '#7AAD34',
+            100,
+            '#7AAD34',
+            750,
+            '#7AAD34',
+          ],
+          'circle-radius': [
+            'step',
+            ['get', 'point_count'],
+            20,
+            100,
+            30,
+            750,
+            40,
+          ],
+          'circle-stroke-color': '#fff',
+          'circle-stroke-width': 2,
+        },
+      });
+
+      this.map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'parks',
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-size': 15,
+        },
+        paint: {
+          'text-color': '#fff',
+        },
+      });
+
+      this.map.addLayer({
+        id: 'unclustered-point',
+        type: 'circle',
+        source: 'parks',
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-radius': 5,
+          'circle-color': '#7AAD34',
+          'circle-stroke-color': '#fff',
+          'circle-stroke-width': 2,
+        },
+      });
+
+      // inspect a cluster on click
+      this.map.on('click', 'clusters', e => {
+        const features = this.map.queryRenderedFeatures(e.point, {
+          layers: ['clusters'],
+        });
+        const clusterId = features[0].properties.cluster_id;
+        this.map
+          .getSource('parks')
+          .getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err) return;
+
+            this.map.easeTo({
+              center: features[0].geometry.coordinates,
+              zoom: zoom,
+            });
+          });
+      });
+
+      this.map.on('mouseenter', 'clusters', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+      this.map.on('mouseleave', 'clusters', () => {
+        this.map.getCanvas().style.cursor = '';
+      });
+
       this.map.addControl(new mapboxgl.NavigationControl());
       this.map.addSource('user', {
         type: 'geojson',
@@ -811,22 +896,22 @@ export class OutlineMap extends LitElement {
 
       this.addUserMarker();
       // this.addMarkers();
-      this.map.addLayer({
-        id: 'parks',
-        type: 'circle',
-        source: 'parks',
-        paint: {
-          'circle-radius': 5,
-          'circle-color': '#7AAD34',
-          'circle-stroke-color': '#fff',
-          'circle-stroke-width': 2,
-        },
-        filter: ['==', '$type', 'Point'],
-      });
+      // this.map.addLayer({
+      //   id: 'parks',
+      //   type: 'circle',
+      //   source: 'parks',
+      //   paint: {
+      //     'circle-radius': 5,
+      //     'circle-color': '#7AAD34',
+      //     'circle-stroke-color': '#fff',
+      //     'circle-stroke-width': 2,
+      //   },
+      //   filter: ['==', '$type', 'Point'],
+      // });
 
       this.map.on('click', (e: any) => {
         const features = this.map.queryRenderedFeatures(e.point, {
-          layers: ['parks'],
+          layers: ['unclustered-point'],
         });
 
         if (features.length !== undefined && features.length > 0) {
