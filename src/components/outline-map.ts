@@ -442,7 +442,8 @@ export class OutlineMap extends LitElement {
     )
       .then(response => response.json())
       .then(data => {
-        const route = data.geometry.coordinates;
+        console.log(data);
+        const route = data.routes[0].geometry.coordinates;
         const geojson = {
           type: 'Feature',
           properties: {},
