@@ -23,12 +23,63 @@ export class OutlineMap extends LitElement {
         color: #101010;
       }
 
-      h1 {
-        font-size: 22px;
-        margin: 0 auto;
-        font-weight: 400;
-        line-height: 20px;
-        padding: 20px 2px;
+      .amenities {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 2px solid #eee;
+        padding: 10px;
+        padding-bottom: 20px;
+      }
+
+      .amenities h4 {
+        color: #464646;
+        margin-bottom: 10px;
+        font-weight: 500;
+        padding-left: 4px;
+        margin-top: 5px;
+        text-decoration: underline;
+      }
+
+      .amenity label {
+        color: #464646;
+        cursor: pointer;
+      }
+
+      .amenity input {
+        color: #464646;
+        /* display: none; */
+      }
+
+      .amenity input:checked + label {
+        color: #056cb6;
+      }
+
+      .amenitiesDetails {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 5px;
+      }
+
+      .amenitiesDetails p {
+        padding: 0 5px;
+        margin: 1px;
+      }
+
+      .clearfix {
+        display: block;
+      }
+
+      .clearfix::after {
+        content: '.';
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
       }
 
       .debug {
@@ -44,6 +95,20 @@ export class OutlineMap extends LitElement {
         border-radius: 4px;
       }
 
+      .distance {
+        font-size: 14px;
+        margin: 1px;
+        color: #464646;
+      }
+
+      h1 {
+        font-size: 22px;
+        margin: 0 auto;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 20px 2px;
+      }
+
       .heading {
         background: #fff;
         border-bottom: 1px solid #eee;
@@ -52,28 +117,6 @@ export class OutlineMap extends LitElement {
         padding: 0 10px;
         width: 100%;
         text-align: center;
-      }
-
-      .sidebar {
-        background-color: white;
-        /* border: 1px #eee solid; */
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        top: 0;
-        left: 0;
-        /* overflow: hidden; */
-        border-right: 1px solid rgba(0, 0, 0, 0.25);
-        z-index: 100;
-      }
-
-      .map-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: full;
-        height: 100vh;
-        overflow: hidden;
       }
 
       .listings {
@@ -131,38 +174,13 @@ export class OutlineMap extends LitElement {
         font-size: 13.5px;
       }
 
-      .distance {
-        font-size: 14px;
-        margin: 1px;
-        color: #464646;
-      }
-
-      ::-webkit-scrollbar {
-        width: 3px;
-        height: 3px;
-        border-left: 0;
-        background: rgba(0, 0, 0, 0.1);
-      }
-
-      ::-webkit-scrollbar-track {
-        background: none;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: #056cb6;
-        border-radius: 0;
-      }
-
-      .clearfix {
-        display: block;
-      }
-
-      .clearfix::after {
-        content: '.';
-        display: block;
-        height: 0;
-        clear: both;
-        visibility: hidden;
+      .map-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: full;
+        height: 100vh;
+        overflow: hidden;
       }
 
       .mapboxgl-popup-close-button {
@@ -208,6 +226,14 @@ export class OutlineMap extends LitElement {
         margin-top: 15px;
       }
 
+      .park-marker {
+        border: none;
+        height: 24px;
+        width: 24px;
+        background-image: url(${unsafeCSS(icons.Marker)});
+        background-color: rgba(0, 0, 0, 0);
+      }
+
       .popup-address {
         padding: 5px;
       }
@@ -225,97 +251,6 @@ export class OutlineMap extends LitElement {
         margin: 3px;
         border: 1px solid black;
         border-radius: 5px;
-      }
-
-      .user-marker {
-        border: none;
-        height: 24px;
-        width: 24px;
-        background-image: url(${unsafeCSS(icons.User)});
-        background-repeat: no-repeat;
-        background-color: rgba(0, 0, 0, 0);
-      }
-
-      .park-marker {
-        border: none;
-        height: 24px;
-        width: 24px;
-        background-image: url(${unsafeCSS(icons.Marker)});
-        background-color: rgba(0, 0, 0, 0);
-      }
-
-      .container {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .smc-header {
-        width: 100%;
-        height: 5%;
-        background-color: #056cb6;
-        margin-bottom: 5px;
-        margin-top: 0;
-        padding-top: 30px;
-      }
-
-      .smc-header h4 {
-        width: 100%;
-        color: white;
-        text-align: center;
-        margin-top: 0;
-        padding-bottom: 30px;
-      }
-
-      .amenities {
-        display: flex;
-        flex-direction: column;
-        border-bottom: 2px solid #eee;
-        padding: 10px;
-        padding-bottom: 20px;
-      }
-
-      .amenities h4 {
-        color: #464646;
-        margin-bottom: 10px;
-        font-weight: 500;
-        padding-left: 4px;
-        margin-top: 5px;
-        text-decoration: underline;
-      }
-
-      .amenity label {
-        color: #464646;
-        cursor: pointer;
-      }
-
-      .amenity input {
-        color: #464646;
-        /* display: none; */
-      }
-
-      .amenity input:checked + label {
-        color: #056cb6;
-      }
-
-      .amenitiesDetails {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 5px;
-      }
-
-      .amenitiesDetails p {
-        padding: 0 5px;
-        margin: 1px;
-      }
-
-      .sr-only:not(:focus):not(:active) {
-        clip: rect(0 0 0 0);
-        clip-path: inset(50%);
-        height: 1px;
-        overflow: hidden;
-        position: absolute;
-        white-space: nowrap;
-        width: 1px;
       }
 
       .search-bar {
@@ -346,6 +281,71 @@ export class OutlineMap extends LitElement {
         padding: 5px;
         padding-left: 10px;
       }
+
+      .sidebar {
+        background-color: white;
+        /* border: 1px #eee solid; */
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        top: 0;
+        left: 0;
+        /* overflow: hidden; */
+        border-right: 1px solid rgba(0, 0, 0, 0.25);
+        z-index: 100;
+      }
+
+      .smc-header {
+        width: 100%;
+        height: 5%;
+        background-color: #056cb6;
+        margin-bottom: 5px;
+        margin-top: 0;
+        padding-top: 30px;
+      }
+
+      .smc-header h4 {
+        width: 100%;
+        color: white;
+        text-align: center;
+        margin-top: 0;
+        padding-bottom: 30px;
+      }
+
+      .sr-only:not(:focus):not(:active) {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
+
+      .user-marker {
+        border: none;
+        height: 24px;
+        width: 24px;
+        background-image: url(${unsafeCSS(icons.User)});
+        background-repeat: no-repeat;
+        background-color: rgba(0, 0, 0, 0);
+      }
+
+      ::-webkit-scrollbar {
+        width: 3px;
+        height: 3px;
+        border-left: 0;
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      ::-webkit-scrollbar-track {
+        background: none;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #056cb6;
+        border-radius: 0;
+      }
     `,
   ];
 
@@ -359,19 +359,19 @@ export class OutlineMap extends LitElement {
   searchField!: HTMLInputElement;
 
   @property()
-  mapboxStyle = 'mapbox://styles/mapbox/streets-v11';
-
-  @property()
-  lng: string | number = -122.2308;
+  debugMode = false;
 
   @property()
   lat: string | number = 37.4889;
 
   @property()
-  currentCoords = [this.lng as number, this.lat as number];
+  lng: string | number = -122.2308;
 
   @property()
-  zoom: string | number = 10;
+  mapBorderRadius?: string;
+
+  @property()
+  mapboxStyle = 'mapbox://styles/mapbox/streets-v11';
 
   @property()
   mapHeight = '100vh';
@@ -380,22 +380,22 @@ export class OutlineMap extends LitElement {
   mapWidth = '100vw';
 
   @property()
-  mapBorderRadius?: string;
-
-  @property()
-  debugMode = false;
-
-  @state()
-  private map!: Map;
-
-  @state()
-  private data!: any;
+  zoom: string | number = 10;
 
   @state()
   private allParks = parks;
 
   @state()
+  private data!: any;
+
+  @state()
   private amenityFilters: string[] = [];
+
+  @state()
+  currentCoords = [this.lng as number, this.lat as number];
+
+  @state()
+  private map!: Map;
 
   @state()
   private mapboxToken =
