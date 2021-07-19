@@ -437,54 +437,51 @@ export class OutlineMap extends LitElement {
   };
 
   getRoute = (end: number[]) => {
-    const url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${this.currentCoords[0]},${this.currentCoords[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${this.mapboxToken}`;
-
-    const req = new XMLHttpRequest();
-    req.open('GET', url, true);
-    req.onload = () => {
-      const json = JSON.parse(req.response);
-      const data = json.routes[0];
-      const route = data.geometry.coordinates;
-      const geojson = {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: route,
-        },
-      };
-      if (this.map.getSource('route')) {
-        // @ts-ignore
-        this.map.getSource('route').setData(geojson);
-      } else {
-        this.map.addLayer({
-          id: 'route',
-          type: 'line',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'Feature',
-              properties: {},
-              geometry: {
-                type: 'LineString',
-                // @ts-ignore
-                coordinates: geojson,
+    fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/cycling/${this.currentCoords[0]},${this.currentCoords[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${this.mapboxToken}`
+    )
+      .then(response => response.json())
+      .then(data => {
+        const route = data.geometry.coordinates;
+        const geojson = {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: route,
+          },
+        };
+        if (this.map.getSource('route')) {
+          // @ts-ignore
+          this.map.getSource('route').setData(geojson);
+        } else {
+          this.map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: {
+              type: 'geojson',
+              data: {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'LineString',
+                  // @ts-ignore
+                  coordinates: geojson,
+                },
               },
             },
-          },
-          layout: {
-            'line-join': 'round',
-            'line-cap': 'round',
-          },
-          paint: {
-            'line-color': '#3887be',
-            'line-width': 5,
-            'line-opacity': 0.75,
-          },
-        });
-      }
-    };
-    req.send();
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round',
+            },
+            paint: {
+              'line-color': '#3887be',
+              'line-width': 5,
+              'line-opacity': 0.75,
+            },
+          });
+        }
+      });
   };
 
   addAmenities = (): void => {
