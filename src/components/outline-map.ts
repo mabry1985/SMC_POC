@@ -349,37 +349,37 @@ export class OutlineMap extends LitElement {
     `,
   ];
 
-  @query('.map-container')
-  mapContainer!: HTMLElement;
-
   @query('#listings')
   listings!: HTMLElement;
+
+  @query('.map-container')
+  mapContainer!: HTMLElement;
 
   @query('#zip-code-search')
   searchField!: HTMLInputElement;
 
-  @property()
+  @property({ type: Boolean, attribute: 'debug-mode' })
   debugMode = false;
 
-  @property()
+  @property({ type: Number })
   lat: string | number = 37.4889;
 
-  @property()
+  @property({ type: Number })
   lng: string | number = -122.2308;
 
-  @property()
+  @property({ attribute: 'map-border-radius' })
   mapBorderRadius?: string;
 
-  @property()
+  @property({ attribute: 'mapbox-style' })
   mapboxStyle = 'mapbox://styles/mapbox/streets-v11';
 
-  @property()
+  @property({ attribute: 'map-height' })
   mapHeight = '100vh';
 
-  @property()
+  @property({ attribute: 'map-width' })
   mapWidth = '100vw';
 
-  @property()
+  @property({ type: Number })
   zoom: string | number = 10;
 
   @state()
@@ -550,6 +550,7 @@ export class OutlineMap extends LitElement {
         }
         listing.classList.add('active');
       });
+
       const listingAddress = listing.appendChild(document.createElement('div'));
       listingAddress.classList.add('listings-address');
       listingAddress.innerHTML +=
