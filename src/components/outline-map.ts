@@ -14,6 +14,16 @@ export class OutlineMap extends LitElement {
   static styles = [
     mapboxStyle,
     css`
+      a,
+      p,
+      label {
+        font-family: 'Roboto', sans-serif;
+      }
+
+      h4 {
+        font-family: 'bookmania', serif;
+      }
+
       a {
         color: #404040;
         text-decoration: none;
@@ -23,12 +33,79 @@ export class OutlineMap extends LitElement {
         color: #101010;
       }
 
-      h1 {
-        font-size: 22px;
-        margin: 0 auto;
-        font-weight: 400;
-        line-height: 20px;
-        padding: 20px 2px;
+      .amenities {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 2px solid #eee;
+        padding: 10px;
+        padding-bottom: 20px;
+      }
+
+      .amenities h4 {
+        color: #464646;
+        font-family: 'Roboto', sans-serif;
+        margin-bottom: 10px;
+        font-weight: 500;
+        padding-left: 4px;
+        margin-top: 5px;
+        text-decoration: underline;
+      }
+
+      .amenities-filter-icon {
+        border: 1px solid black;
+        padding: 2px;
+        border-radius: 5px;
+        width: 15px;
+        height: 15px;
+      }
+
+      .amenity {
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+      }
+
+      .amenity label {
+        color: #464646;
+        padding: 0 5px;
+        cursor: pointer;
+      }
+
+      .amenity input {
+        color: #464646;
+        /* display: none; */
+      }
+
+      .amenity input:checked + label {
+        color: #056cb6;
+      }
+
+      .amenitiesDetails {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 5px;
+      }
+
+      .amenitiesDetails p {
+        padding: 0 5px;
+        margin: 1px;
+      }
+
+      .clearfix {
+        display: block;
+      }
+
+      .clearfix::after {
+        content: '.';
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
       }
 
       .debug {
@@ -44,6 +121,20 @@ export class OutlineMap extends LitElement {
         border-radius: 4px;
       }
 
+      .distance {
+        font-size: 14px;
+        margin: 1px;
+        color: #464646;
+      }
+
+      h1 {
+        font-size: 22px;
+        margin: 0 auto;
+        font-weight: 400;
+        line-height: 20px;
+        padding: 20px 2px;
+      }
+
       .heading {
         background: #fff;
         border-bottom: 1px solid #eee;
@@ -54,33 +145,21 @@ export class OutlineMap extends LitElement {
         text-align: center;
       }
 
-      .sidebar {
-        background-color: white;
-        /* border: 1px #eee solid; */
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        top: 0;
-        left: 0;
-        /* overflow: hidden; */
-        border-right: 1px solid rgba(0, 0, 0, 0.25);
-        z-index: 100;
-      }
-
-      .map-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: full;
-        height: 100vh;
-        overflow: hidden;
-      }
-
       .listings {
         display: flex;
         flex-direction: column;
         overflow: auto;
         /* height: 60%; */
+      }
+
+      .list-item-amenity-container {
+        width: 50%;
+        padding: 5px 0;
+      }
+
+      .list-item-amenity-container img {
+        width: 16px;
+        height: 16px;
       }
 
       .listings .item {
@@ -125,48 +204,19 @@ export class OutlineMap extends LitElement {
         color: #464646;
       }
 
-      .listings-address a {
-        text-decoration: underline;
-        color: #056cb6;
-        font-size: 13.5px;
-      }
-
-      .distance {
-        font-size: 14px;
-        margin: 1px;
-        color: #464646;
-      }
-
-      ::-webkit-scrollbar {
-        width: 3px;
-        height: 3px;
-        border-left: 0;
-        background: rgba(0, 0, 0, 0.1);
-      }
-
-      ::-webkit-scrollbar-track {
-        background: none;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: #056cb6;
-        border-radius: 0;
-      }
-
-      .clearfix {
-        display: block;
-      }
-
-      .clearfix::after {
-        content: '.';
-        display: block;
-        height: 0;
-        clear: both;
-        visibility: hidden;
+      .map-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: full;
+        height: 100vh;
+        overflow: hidden;
       }
 
       .mapboxgl-popup-close-button {
-        display: none;
+        color: white;
+        padding-top: 2px;
+        padding-right: 6px;
       }
 
       .mapboxgl-popup-content {
@@ -174,7 +224,6 @@ export class OutlineMap extends LitElement {
         padding: 0;
         max-width: 220px;
         background-color: white;
-        pointer-events: none;
       }
 
       .mapboxgl-popup-content-wrapper {
@@ -183,10 +232,13 @@ export class OutlineMap extends LitElement {
 
       .mapboxgl-popup-content h4 {
         text-align: center;
+        font-family: 'Roboto';
         font-size: 18px;
+        font-weight: 700;
         margin: 0;
         display: block;
         padding: 10px;
+        padding-top: 15px;
         font-weight: 500;
         color: white;
         background-color: #056cb6;
@@ -208,8 +260,29 @@ export class OutlineMap extends LitElement {
         margin-top: 15px;
       }
 
+      .park-marker {
+        border: none;
+        height: 24px;
+        width: 24px;
+        background-image: url(${unsafeCSS(icons.Marker)});
+        background-color: rgba(0, 0, 0, 0);
+      }
+
+      .park-website,
+      .park-website-listing {
+        text-decoration: underline;
+        color: #056cb6;
+        font-size: 13.5px;
+      }
+
+      .park-website-listing {
+        display: block;
+        margin: 0;
+        text-align: center;
+      }
+
       .popup-address {
-        padding: 5px;
+        padding: 0 5px;
       }
 
       #popup-icons-container {
@@ -225,97 +298,6 @@ export class OutlineMap extends LitElement {
         margin: 3px;
         border: 1px solid black;
         border-radius: 5px;
-      }
-
-      .user-marker {
-        border: none;
-        height: 24px;
-        width: 24px;
-        background-image: url(${unsafeCSS(icons.User)});
-        background-repeat: no-repeat;
-        background-color: rgba(0, 0, 0, 0);
-      }
-
-      .park-marker {
-        border: none;
-        height: 24px;
-        width: 24px;
-        background-image: url(${unsafeCSS(icons.Marker)});
-        background-color: rgba(0, 0, 0, 0);
-      }
-
-      .container {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .smc-header {
-        width: 100%;
-        height: 5%;
-        background-color: #056cb6;
-        margin-bottom: 5px;
-        margin-top: 0;
-        padding-top: 30px;
-      }
-
-      .smc-header h4 {
-        width: 100%;
-        color: white;
-        text-align: center;
-        margin-top: 0;
-        padding-bottom: 30px;
-      }
-
-      .amenities {
-        display: flex;
-        flex-direction: column;
-        border-bottom: 2px solid #eee;
-        padding: 10px;
-        padding-bottom: 20px;
-      }
-
-      .amenities h4 {
-        color: #464646;
-        margin-bottom: 10px;
-        font-weight: 500;
-        padding-left: 4px;
-        margin-top: 5px;
-        text-decoration: underline;
-      }
-
-      .amenity label {
-        color: #464646;
-        cursor: pointer;
-      }
-
-      .amenity input {
-        color: #464646;
-        /* display: none; */
-      }
-
-      .amenity input:checked + label {
-        color: #056cb6;
-      }
-
-      .amenitiesDetails {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 5px;
-      }
-
-      .amenitiesDetails p {
-        padding: 0 5px;
-        margin: 1px;
-      }
-
-      .sr-only:not(:focus):not(:active) {
-        clip: rect(0 0 0 0);
-        clip-path: inset(50%);
-        height: 1px;
-        overflow: hidden;
-        position: absolute;
-        white-space: nowrap;
-        width: 1px;
       }
 
       .search-bar {
@@ -346,56 +328,129 @@ export class OutlineMap extends LitElement {
         padding: 5px;
         padding-left: 10px;
       }
+
+      .sidebar {
+        background-color: white;
+        /* border: 1px #eee solid; */
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        top: 0;
+        left: 0;
+        border-right: 1px solid rgba(0, 0, 0, 0.25);
+        z-index: 100;
+      }
+
+      .smc-header {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 10%;
+        background-color: #056cb6;
+        margin-bottom: 5px;
+        margin-top: 0;
+        padding: 15px 0;
+      }
+
+      .smc-header h4 {
+        color: white;
+        font-size: 17px;
+        padding-left: 10px;
+        padding-top: 4px;
+      }
+
+      .smc-logo {
+        padding-left: 5px;
+        width: 25px;
+        height: 25px;
+      }
+
+      .sr-only:not(:focus):not(:active) {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
+
+      .user-marker {
+        border: none;
+        height: 24px;
+        width: 24px;
+        background-image: url(${unsafeCSS(icons.User)});
+        background-repeat: no-repeat;
+        background-color: rgba(0, 0, 0, 0);
+      }
+
+      ::-webkit-scrollbar {
+        width: 3px;
+        height: 3px;
+        border-left: 0;
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      ::-webkit-scrollbar-track {
+        background: none;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #056cb6;
+        border-radius: 0;
+      }
     `,
   ];
-
-  @query('.map-container')
-  mapContainer!: HTMLElement;
 
   @query('#listings')
   listings!: HTMLElement;
 
+  @query('.map-container')
+  mapContainer!: HTMLElement;
+
   @query('#zip-code-search')
   searchField!: HTMLInputElement;
 
-  @property()
-  mapboxStyle = 'mapbox://styles/mapbox/streets-v11';
-
-  @property()
-  lng: string | number = -122.2308;
-
-  @property()
-  lat: string | number = 37.4889;
-
-  @property()
-  currentCoords = [this.lng as number, this.lat as number];
-
-  @property()
-  zoom: string | number = 10;
-
-  @property()
-  mapHeight = '100vh';
-
-  @property()
-  mapWidth = '100vw';
-
-  @property()
-  mapBorderRadius?: string;
-
-  @property()
+  @property({ type: Boolean, attribute: 'debug-mode' })
   debugMode = false;
 
-  @state()
-  private map!: Map;
+  @property({ type: Number })
+  lat: string | number = 37.4889;
 
-  @state()
-  private data!: any;
+  @property({ type: Number })
+  lng: string | number = -122.2308;
+
+  @property({ attribute: 'map-border-radius' })
+  mapBorderRadius?: string;
+
+  @property({ attribute: 'mapbox-style' })
+  mapboxStyle = 'mapbox://styles/mabrycodes/ckre80p1c37k318pitkzy2uwn';
+
+  @property({ attribute: 'map-height' })
+  mapHeight = '100vh';
+
+  @property({ attribute: 'map-width' })
+  mapWidth = '100vw';
+
+  @property({ type: Number })
+  zoom: string | number = 10;
 
   @state()
   private allParks = parks;
 
   @state()
+  private data!: any;
+
+  @state()
   private amenityFilters: string[] = [];
+
+  @state()
+  currentCoords = [this.lng as number, this.lat as number];
+
+  @state()
+  private map!: Map;
 
   @state()
   private mapboxToken =
@@ -437,54 +492,51 @@ export class OutlineMap extends LitElement {
   };
 
   getRoute = (end: number[]) => {
-    const url = `https://api.mapbox.com/directions/v5/mapbox/cycling/${this.currentCoords[0]},${this.currentCoords[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${this.mapboxToken}`;
-
-    const req = new XMLHttpRequest();
-    req.open('GET', url, true);
-    req.onload = () => {
-      const json = JSON.parse(req.response);
-      const data = json.routes[0];
-      const route = data.geometry.coordinates;
-      const geojson = {
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates: route,
-        },
-      };
-      if (this.map.getSource('route')) {
-        // @ts-ignore
-        this.map.getSource('route').setData(geojson);
-      } else {
-        this.map.addLayer({
-          id: 'route',
-          type: 'line',
-          source: {
-            type: 'geojson',
-            data: {
-              type: 'Feature',
-              properties: {},
-              geometry: {
-                type: 'LineString',
-                // @ts-ignore
-                coordinates: geojson,
+    fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/cycling/${this.currentCoords[0]},${this.currentCoords[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${this.mapboxToken}`
+    )
+      .then(response => response.json())
+      .then(data => {
+        const route = data.routes[0].geometry.coordinates;
+        const geojson = {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: route,
+          },
+        };
+        if (this.map.getSource('route')) {
+          // @ts-ignore
+          this.map.getSource('route').setData(geojson);
+        } else {
+          this.map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: {
+              type: 'geojson',
+              data: {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'LineString',
+                  // @ts-ignore
+                  coordinates: geojson,
+                },
               },
             },
-          },
-          layout: {
-            'line-join': 'round',
-            'line-cap': 'round',
-          },
-          paint: {
-            'line-color': '#3887be',
-            'line-width': 5,
-            'line-opacity': 0.75,
-          },
-        });
-      }
-    };
-    req.send();
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round',
+            },
+            paint: {
+              'line-color': '#3887be',
+              'line-width': 5,
+              'line-opacity': 0.75,
+            },
+          });
+        }
+      });
   };
 
   addAmenities = (): void => {
@@ -553,22 +605,20 @@ export class OutlineMap extends LitElement {
         }
         listing.classList.add('active');
       });
+
       const listingAddress = listing.appendChild(document.createElement('div'));
       listingAddress.classList.add('listings-address');
       listingAddress.innerHTML +=
         '<p>1234 NE Street Ave</p><p>City State 00000</p>';
+      const amenityContainer = listingAddress.appendChild(
+        document.createElement('div')
+      );
+      amenityContainer.classList.add('list-item-amenity-container');
+      amenityContainer.innerHTML += this.renderAmenitiesIcons(park).join(' ');
       listingAddress.innerHTML +=
-        '<a href="https://parks.smcgov.org/" target="_blank">Park Website</a>';
+        '<a class="park-website" href="https://parks.smcgov.org/" target="_blank">Park Website</a>';
       const details = listing.appendChild(document.createElement('div'));
-      // const amenitiesDetails = details.appendChild(
-      //   document.createElement('div')
-      // );
-      // amenitiesDetails.classList.add('amenitiesDetails');
-      // if (prop.amenities) {
-      //   prop.amenities.forEach((a: string) => {
-      //     amenitiesDetails.innerHTML += `<p>${a}</p>`;
-      //   });
-      // }
+
       if (prop.distance) {
         details.innerHTML += `<p class='distance'><strong>${
           Math.round(prop.distance * 100) / 100
@@ -622,12 +672,15 @@ export class OutlineMap extends LitElement {
     });
   };
 
+  renderAmenitiesIcons = (currentFeature: any) =>
+    currentFeature.properties.amenities.map(
+      (a: string) => `<img class='popup-icon' src=${icons[a]} alt=${a}/>`
+    );
+
   createPopUp = (currentFeature: any) => {
     const popUps = this.shadowRoot!.querySelectorAll('.mapboxgl-popup');
     if (popUps[0]) popUps[0].remove();
-    const amenities = currentFeature.properties.amenities.map(
-      a => `<img class='popup-icon' src=${icons[a]} alt=${a}/>`
-    );
+    const amenities = this.renderAmenitiesIcons(currentFeature);
     new mapboxgl.Popup({ closeOnClick: false })
       .setLngLat(currentFeature.geometry.coordinates)
       .setHTML(
@@ -635,6 +688,7 @@ export class OutlineMap extends LitElement {
         <div class="popup-address">
           <p>1234 NE Street Ave</p>
           <p>City, State 00000</p>
+          <a class="park-website-listing" href="https://parks.smcgov.org/" target="_blank">Park Website</a>
         </div>
         <div id='popup-icons-container'>
           ${amenities.join(' ')}
@@ -728,7 +782,7 @@ export class OutlineMap extends LitElement {
     `;
   }
 
-  renderAmenities = (): TemplateResult[] =>
+  renderAmenitiesTemplate = (): TemplateResult[] =>
     allAmenities.map(
       a =>
         html`<span class="amenity">
@@ -740,6 +794,7 @@ export class OutlineMap extends LitElement {
             .value=${a}
           />
           <label id=${a} for=${a}>${a}</label>
+          <img class="amenities-filter-icon" src=${icons[a]} alt=${a} />
         </span> `
     );
 
@@ -817,7 +872,7 @@ export class OutlineMap extends LitElement {
         source: 'parks',
         paint: {
           'circle-radius': 5,
-          'circle-color': '#7AAD34',
+          'circle-color': '#056CB6',
           'circle-stroke-color': '#fff',
           'circle-stroke-width': 2,
         },
@@ -834,10 +889,10 @@ export class OutlineMap extends LitElement {
             d => d.properties.id === features[0].properties!.id
           )[0];
 
-          const bbox = this.getBbox(clickedPoint, this.currentCoords);
-          this.map.fitBounds(bbox as LngLatBoundsLike, {
-            padding: 120,
-          });
+          // const bbox = this.getBbox(clickedPoint, this.currentCoords);
+          // this.map.fitBounds(bbox as LngLatBoundsLike, {
+          //   padding: 120,
+          // });
           this.createPopUp(clickedPoint);
           // @ts-ignore
           this.getRoute(clickedPoint.geometry.coordinates);
@@ -851,6 +906,14 @@ export class OutlineMap extends LitElement {
           );
           listing!.classList.add('active');
         }
+      });
+
+      this.map.on('mouseenter', 'parks', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+
+      this.map.on('mouseleave', 'parks', () => {
+        this.map.getCanvas().style.cursor = '';
       });
       this.buildLocationList(this.data);
     });
@@ -868,11 +931,11 @@ export class OutlineMap extends LitElement {
     };
     const sidebarStyles = {
       height: this.mapHeight,
-      width: '15vw',
+      width: '18vw',
     };
     const listingsStyle = {
       height: '100vh',
-      width: '15vw',
+      width: '18vw',
       overflow: 'auto',
     };
     return html`
@@ -881,6 +944,11 @@ export class OutlineMap extends LitElement {
         <div class="map-wrapper">
           <div class="sidebar" style=${styleMap(sidebarStyles)}>
             <div class="smc-header">
+              <img
+                class="smc-logo"
+                src=${icons.Logo}
+                alt="san mateo county logo"
+              />
               <a href="https://parks.smcgov.org/" target="_blank">
                 <h4>San Mateo County Parks</h4>
               </a>
@@ -888,7 +956,7 @@ export class OutlineMap extends LitElement {
 
             <div class="amenities">
               <h4>Filter By Amenities</h4>
-              ${this.renderAmenities()}
+              ${this.renderAmenitiesTemplate()}
             </div>
             <div
               id="listings"

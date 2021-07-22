@@ -1,14 +1,13 @@
 import { LitElement, html } from 'lit';
 import { customElement, query } from 'lit/decorators.js';
 import { attachRouter } from './router.js';
-import { tailwindStyles } from './styles';
 
 @customElement('app-root')
 export class AppRoot extends LitElement {
   @query('main')
   private main!: HTMLElement;
 
-  static styles = [tailwindStyles];
+  static styles = [];
 
   render() {
     return html`

@@ -12,7 +12,7 @@ export const allAmenities = [
 ];
 
 export const parkAmenities = [
-  ['Baseball', 'Picnic', 'Playground', 'Restrooms', 'Tennis', 'Restrooms'],
+  ['Baseball', 'Picnic', 'Playground', 'Restrooms', 'Tennis'],
   ['Dog Park', 'Playground', 'Restrooms', 'Skateboarding'],
   ['Dog Park', 'Basketball', 'Restrooms'],
   ['Playground', 'Restrooms', 'Swimming'],
@@ -20,13 +20,7 @@ export const parkAmenities = [
   ['Basketball', 'Dog Park', 'Picnic', 'Swimming', 'Restrooms'],
   ['Dog Park', 'Picnic', 'Playground', 'Restrooms'],
   ['Baseball', 'Restrooms', 'Tennis', 'Skateboarding'],
-  [
-    'Playground',
-    'Restrooms',
-    'Skateboarding',
-    'Swimming',
-    'Tennis',
-  ],
+  ['Playground', 'Restrooms', 'Skateboarding', 'Swimming', 'Tennis'],
   ['Basketball', 'Baseball', 'Boating', 'Dog Park', 'Picnic'],
   [
     'Basketball',
@@ -73,5 +67,5 @@ export const icons = {
   Skateboarding: '/dist/components/assets/skateboarder.svg',
   Swimming: '/dist/components/assets/swim.svg',
   Tennis: '/dist/components/assets/tennis.svg',
-  User: '/dist/components/assets/user-marker.svg',
+  User: '/dist/components/assets/user-marker.png',
 };
