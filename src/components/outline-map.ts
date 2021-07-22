@@ -345,12 +345,13 @@ export class OutlineMap extends LitElement {
         box-sizing: border-box;
         display: flex;
         align-items: center;
+        justify-content: center;
         width: 100%;
         height: 10%;
         background-color: #056cb6;
         margin-bottom: 5px;
         margin-top: 0;
-        padding: 15px 5px 20px 10px;
+        padding: 15px 0;
       }
 
       .smc-header h4 {
@@ -930,11 +931,11 @@ export class OutlineMap extends LitElement {
     };
     const sidebarStyles = {
       height: this.mapHeight,
-      width: '20vw',
+      width: '18vw',
     };
     const listingsStyle = {
       height: '100vh',
-      width: '20vw',
+      width: '18vw',
       overflow: 'auto',
     };
     return html`
