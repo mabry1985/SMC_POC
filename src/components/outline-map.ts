@@ -426,7 +426,7 @@ export class OutlineMap extends LitElement {
   mapBorderRadius?: string;
 
   @property({ attribute: 'mapbox-style' })
-  mapboxStyle = 'mapbox://styles/mabrycodes/ckre80p1c37k318pitkzy2uwn';
+  mapboxStyle = 'mapbox://styles/mabrycodes/ckrf03w3b3yy517o7vk30q120';
 
   @property({ attribute: 'map-height' })
   mapHeight = '100vh';
