@@ -40,8 +40,23 @@ export class OutlineMap extends LitElement {
         text-decoration: underline;
       }
 
+      .amenities-filter-icon {
+        border: 1px solid black;
+        padding: 2px;
+        border-radius: 5px;
+        width: 15px;
+        height: 15px;
+      }
+
+      .amenity {
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+      }
+
       .amenity label {
         color: #464646;
+        padding: 0 5px;
         cursor: pointer;
       }
 
@@ -126,6 +141,16 @@ export class OutlineMap extends LitElement {
         /* height: 60%; */
       }
 
+      .list-item-amenity-container {
+        width: 50%;
+        padding: 5px 0;
+      }
+
+      .list-item-amenity-container img {
+        width: 16px;
+        height: 16px;
+      }
+
       .listings .item {
         display: block;
         border-bottom: 1px solid #eee;
@@ -168,12 +193,6 @@ export class OutlineMap extends LitElement {
         color: #464646;
       }
 
-      .listings-address a {
-        text-decoration: underline;
-        color: #056cb6;
-        font-size: 13.5px;
-      }
-
       .map-wrapper {
         display: flex;
         justify-content: center;
@@ -184,7 +203,9 @@ export class OutlineMap extends LitElement {
       }
 
       .mapboxgl-popup-close-button {
-        display: none;
+        color: white;
+        padding-top: 2px;
+        padding-right: 6px;
       }
 
       .mapboxgl-popup-content {
@@ -192,7 +213,6 @@ export class OutlineMap extends LitElement {
         padding: 0;
         max-width: 220px;
         background-color: white;
-        pointer-events: none;
       }
 
       .mapboxgl-popup-content-wrapper {
@@ -234,8 +254,21 @@ export class OutlineMap extends LitElement {
         background-color: rgba(0, 0, 0, 0);
       }
 
+      .park-website,
+      .park-website-listing {
+        text-decoration: underline;
+        color: #056cb6;
+        font-size: 13.5px;
+      }
+
+      .park-website-listing {
+        display: block;
+        margin: 0;
+        text-align: center;
+      }
+
       .popup-address {
-        padding: 5px;
+        padding: 0 5px;
       }
 
       #popup-icons-container {
@@ -442,7 +475,6 @@ export class OutlineMap extends LitElement {
     )
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         const route = data.routes[0].geometry.coordinates;
         const geojson = {
           type: 'Feature',
@@ -556,18 +588,15 @@ export class OutlineMap extends LitElement {
       listingAddress.classList.add('listings-address');
       listingAddress.innerHTML +=
         '<p>1234 NE Street Ave</p><p>City State 00000</p>';
+      const amenityContainer = listingAddress.appendChild(
+        document.createElement('div')
+      );
+      amenityContainer.classList.add('list-item-amenity-container');
+      amenityContainer.innerHTML += this.renderAmenitiesIcons(park).join(' ');
       listingAddress.innerHTML +=
-        '<a href="https://parks.smcgov.org/" target="_blank">Park Website</a>';
+        '<a class="park-website" href="https://parks.smcgov.org/" target="_blank">Park Website</a>';
       const details = listing.appendChild(document.createElement('div'));
-      // const amenitiesDetails = details.appendChild(
-      //   document.createElement('div')
-      // );
-      // amenitiesDetails.classList.add('amenitiesDetails');
-      // if (prop.amenities) {
-      //   prop.amenities.forEach((a: string) => {
-      //     amenitiesDetails.innerHTML += `<p>${a}</p>`;
-      //   });
-      // }
+
       if (prop.distance) {
         details.innerHTML += `<p class='distance'><strong>${
           Math.round(prop.distance * 100) / 100
@@ -621,12 +650,15 @@ export class OutlineMap extends LitElement {
     });
   };
 
+  renderAmenitiesIcons = (currentFeature: any) =>
+    currentFeature.properties.amenities.map(
+      (a: string) => `<img class='popup-icon' src=${icons[a]} alt=${a}/>`
+    );
+
   createPopUp = (currentFeature: any) => {
     const popUps = this.shadowRoot!.querySelectorAll('.mapboxgl-popup');
     if (popUps[0]) popUps[0].remove();
-    const amenities = currentFeature.properties.amenities.map(
-      a => `<img class='popup-icon' src=${icons[a]} alt=${a}/>`
-    );
+    const amenities = this.renderAmenitiesIcons(currentFeature);
     new mapboxgl.Popup({ closeOnClick: false })
       .setLngLat(currentFeature.geometry.coordinates)
       .setHTML(
@@ -634,6 +666,7 @@ export class OutlineMap extends LitElement {
         <div class="popup-address">
           <p>1234 NE Street Ave</p>
           <p>City, State 00000</p>
+          <a class="park-website-listing" href="https://parks.smcgov.org/" target="_blank">Park Website</a>
         </div>
         <div id='popup-icons-container'>
           ${amenities.join(' ')}
@@ -727,7 +760,7 @@ export class OutlineMap extends LitElement {
     `;
   }
 
-  renderAmenities = (): TemplateResult[] =>
+  renderAmenitiesTemplate = (): TemplateResult[] =>
     allAmenities.map(
       a =>
         html`<span class="amenity">
@@ -739,6 +772,7 @@ export class OutlineMap extends LitElement {
             .value=${a}
           />
           <label id=${a} for=${a}>${a}</label>
+          <img class="amenities-filter-icon" src=${icons[a]} alt=${a} />
         </span> `
     );
 
@@ -816,7 +850,7 @@ export class OutlineMap extends LitElement {
         source: 'parks',
         paint: {
           'circle-radius': 5,
-          'circle-color': '#7AAD34',
+          'circle-color': '#056CB6',
           'circle-stroke-color': '#fff',
           'circle-stroke-width': 2,
         },
@@ -833,10 +867,10 @@ export class OutlineMap extends LitElement {
             d => d.properties.id === features[0].properties!.id
           )[0];
 
-          const bbox = this.getBbox(clickedPoint, this.currentCoords);
-          this.map.fitBounds(bbox as LngLatBoundsLike, {
-            padding: 120,
-          });
+          // const bbox = this.getBbox(clickedPoint, this.currentCoords);
+          // this.map.fitBounds(bbox as LngLatBoundsLike, {
+          //   padding: 120,
+          // });
           this.createPopUp(clickedPoint);
           // @ts-ignore
           this.getRoute(clickedPoint.geometry.coordinates);
@@ -850,6 +884,14 @@ export class OutlineMap extends LitElement {
           );
           listing!.classList.add('active');
         }
+      });
+
+      this.map.on('mouseenter', 'parks', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+
+      this.map.on('mouseleave', 'parks', () => {
+        this.map.getCanvas().style.cursor = '';
       });
       this.buildLocationList(this.data);
     });
@@ -887,7 +929,7 @@ export class OutlineMap extends LitElement {
 
             <div class="amenities">
               <h4>Filter By Amenities</h4>
-              ${this.renderAmenities()}
+              ${this.renderAmenitiesTemplate()}
             </div>
             <div
               id="listings"
