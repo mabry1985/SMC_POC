@@ -14,6 +14,16 @@ export class OutlineMap extends LitElement {
   static styles = [
     mapboxStyle,
     css`
+      a,
+      p,
+      label {
+        font-family: 'Roboto', sans-serif;
+      }
+
+      h4 {
+        font-family: 'bookmania', serif;
+      }
+
       a {
         color: #404040;
         text-decoration: none;
@@ -33,6 +43,7 @@ export class OutlineMap extends LitElement {
 
       .amenities h4 {
         color: #464646;
+        font-family: 'Roboto', sans-serif;
         margin-bottom: 10px;
         font-weight: 500;
         padding-left: 4px;
@@ -221,10 +232,13 @@ export class OutlineMap extends LitElement {
 
       .mapboxgl-popup-content h4 {
         text-align: center;
+        font-family: 'Roboto';
         font-size: 18px;
+        font-weight: 700;
         margin: 0;
         display: block;
         padding: 10px;
+        padding-top: 15px;
         font-weight: 500;
         color: white;
         background-color: #056cb6;
