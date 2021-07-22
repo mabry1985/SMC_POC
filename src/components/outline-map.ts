@@ -337,26 +337,33 @@ export class OutlineMap extends LitElement {
         position: relative;
         top: 0;
         left: 0;
-        /* overflow: hidden; */
         border-right: 1px solid rgba(0, 0, 0, 0.25);
         z-index: 100;
       }
 
       .smc-header {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
         width: 100%;
-        height: 5%;
+        height: 10%;
         background-color: #056cb6;
         margin-bottom: 5px;
         margin-top: 0;
-        padding-top: 30px;
+        padding: 15px 5px 20px 10px;
       }
 
       .smc-header h4 {
-        width: 100%;
         color: white;
-        text-align: center;
-        margin-top: 0;
-        padding-bottom: 30px;
+        font-size: 17px;
+        padding-left: 10px;
+        padding-top: 4px;
+      }
+
+      .smc-logo {
+        padding-left: 5px;
+        width: 25px;
+        height: 25px;
       }
 
       .sr-only:not(:focus):not(:active) {
@@ -923,11 +930,11 @@ export class OutlineMap extends LitElement {
     };
     const sidebarStyles = {
       height: this.mapHeight,
-      width: '15vw',
+      width: '20vw',
     };
     const listingsStyle = {
       height: '100vh',
-      width: '15vw',
+      width: '20vw',
       overflow: 'auto',
     };
     return html`
@@ -936,6 +943,11 @@ export class OutlineMap extends LitElement {
         <div class="map-wrapper">
           <div class="sidebar" style=${styleMap(sidebarStyles)}>
             <div class="smc-header">
+              <img
+                class="smc-logo"
+                src=${icons.Logo}
+                alt="san mateo county logo"
+              />
               <a href="https://parks.smcgov.org/" target="_blank">
                 <h4>San Mateo County Parks</h4>
               </a>
