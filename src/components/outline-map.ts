@@ -580,7 +580,7 @@ export class OutlineMap extends LitElement {
   buildLocationList = (data: any): void => {
     data.forEach((park: any) => {
       const prop = park.properties;
-      const parkCoords = park.geometry.coordinates;
+      // const parkCoords = park.geometry.coordinates;
       const listing = this.listings.appendChild(document.createElement('div'));
       listing.id = `listing-${prop.id}`;
       listing.className = 'item';
@@ -597,7 +597,7 @@ export class OutlineMap extends LitElement {
           padding: 180,
         });
         this.createPopUp(park);
-        this.getRoute(parkCoords);
+        // this.getRoute(parkCoords);
 
         const activeItem = this.shadowRoot!.querySelectorAll('.active');
         if (activeItem[0]) {
@@ -895,7 +895,7 @@ export class OutlineMap extends LitElement {
           // });
           this.createPopUp(clickedPoint);
           // @ts-ignore
-          this.getRoute(clickedPoint.geometry.coordinates);
+          // this.getRoute(clickedPoint.geometry.coordinates);
 
           const activeItem = this.shadowRoot!.querySelectorAll('.active');
           if (activeItem[0]) {
